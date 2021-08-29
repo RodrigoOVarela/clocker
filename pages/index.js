@@ -1,3 +1,6 @@
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+
 import {
   Container,
   Box,
@@ -6,11 +9,50 @@ import {
   Text,
   FormControl,
   FormLabel,
+  FormHelperText,
+  InputGroup,
+  InputLeftAddon,
 } from '@chakra-ui/react'
 
 import { Logo } from './../components'
 
+let schema = yup.object().shape({
+  name: yup.string().required(),
+  age: yup.number().required().positive().integer(),
+  email: yup.string().email(),
+  website: yup.string().url(),
+  createdOn: yup.date().default(function () {
+    return new Date();
+  }),
+});
+
+const validationSchema = yup.object().shape({
+  email: yup.string().email('E-mail inválido').required('Preenchimento obirgatório'),
+  password: yup.string().required('Preenchimento obirgatório'),
+  username: yup.string().required('Preenchimento obirgatório'),
+})
+
 export default function Home() {
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+  } = useFormik({
+    onSubmit: (values, form) => {
+      console.log(values)
+    },
+    validationSchema,
+    initialValues: {
+      email: '',
+      username: '',
+      password: ''
+    }
+  })
+
   return (
     <Container p={4} centerContent>
       <Logo />
@@ -21,23 +63,31 @@ export default function Home() {
       <Box>
         <FormControl id="email" p={4} isRequired>
           <FormLabel>Email</FormLabel>
-          <Input type="email" />
+          <Input size="lg" type="email" value={values.email} onChange={handleChange}
+            onBlur={handleBlur} />
+          {touched.email && <FormHelperText textColor="#e74c3c">{errors.email}</FormHelperText>}
         </FormControl>
 
         <FormControl id="password" p={4} isRequired>
           <FormLabel>Senha</FormLabel>
-          <Input type="password" />
+          <Input size="lg" type="password" value={values.password} onChange={handleChange}
+            onBlur={handleBlur} />
+          {touched.password && <FormHelperText textColor="#e74c3c">{errors.password}</FormHelperText>}
         </FormControl>
-        <Box display="flex" flexDirection="row" alignItems="center">
-          <Text>clocker.worker/</Text>
-          <FormControl id="username" p={4} isRequired>
-            <Input type="username" />
-          </FormControl>
-        </Box>
+
+        <FormControl id="username" p={4} isRequired>
+          <InputGroup size="lg">
+            <InputLeftAddon children="clocker.worker/" />
+            <Input type="username" value={values.username} onChange={handleChange}
+              onBlur={handleBlur} />
+          </InputGroup>
+          {touched.username && <FormHelperText textColor="#e74c3c">{errors.username}</FormHelperText>}
+        </FormControl>
 
         <Box p={4}>
-          <Button width="100%">Entrar</Button>
+          <Button colorScheme="blue" width="100%" onClick={handleSubmit} isLoading={isSubmitting}>Entrar</Button>
         </Box>
+
       </Box>
     </Container>
   )
