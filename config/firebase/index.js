@@ -1,4 +1,4 @@
-import firebase  from 'firebase/compat/app'
+import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth';
 
 const firebaseConfig = {
@@ -11,6 +11,10 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
 };
 
-export default firebase.apps.length
+const app = firebase.apps.length
     ? firebase.app()
     : firebase.initializeApp(firebaseConfig)
+
+export const persistenceMode = firebase.auth.Auth.Persistence.LOCAL
+
+export default app
