@@ -75,7 +75,7 @@ export default function Signup() {
 
         <FormControl id="username" p={4} isRequired>
           <InputGroup size="lg">
-            <InputLeftAddon children="clocker.worker/" />
+            <InputLeftAddon>clocker.worker/</InputLeftAddon>
             <Input type="username" value={values.username} onChange={handleChange}
               onBlur={handleBlur} />
           </InputGroup>
@@ -88,6 +88,6 @@ export default function Signup() {
 
         <Link href="/">Já tem uma conta? Acesse</Link>
       </Box>
-    </Container>
+    </Container >
   )
 }
